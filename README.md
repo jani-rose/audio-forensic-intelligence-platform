@@ -253,6 +253,8 @@ http://127.0.0.1:8000
 
 ## Author
 
+Author
+
 Jani Rose Lawwellman
 
-Developed as an Audio Forensic Intelligence Platform project using Django, Librosa, Bootstrap, and ReportLab.
+Audio Forensic Intelligence Platform developed using Django, Python, Librosa, NumPy, Bootstrap, SQLite, and ReportLab.
