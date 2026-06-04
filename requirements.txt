@@ -1,0 +1,5 @@
+Django>=4.2
+librosa>=0.10
+numpy>=1.24
+reportlab>=4.0
+django-jazzmin>=2.6

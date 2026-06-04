@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AFIP — Audio Forensic Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <style>
+    :root {
+      --bg:          #f7f5f2;
+      --bg2:         #fdfcfb;
+      --surface:     #ffffff;
+      --surface2:    #faf8f6;
+
+      --sage:        #8aab96;
+      --sage-light:  #c8dcd0;
+      --sage-dim:    #e8f0eb;
+      --blue:        #7eafc9;
+      --blue-light:  #b8d4e8;
+      --blue-dim:    #e3eff6;
+      --blush:       #d4a5b0;
+      --blush-light: #eac8cf;
+      --blush-dim:   #f5e8eb;
+      --lavender:    #b5aed4;
+      --lav-dim:     #eae8f4;
+      --warm:        #d4b896;
+      --warm-dim:    #f5ede3;
+
+      --border:      #e8e4df;
+      --border2:     #d8d2cb;
+
+      --text:        #3d3530;
+      --text-mid:    #7a6e67;
+      --text-soft:   #a89f97;
+      --text-pale:   #c8c0b8;
+
+      --sans:        'Nunito', sans-serif;
+      --serif:       'Cormorant Garamond', serif;
+      --radius:      12px;
+      --radius-lg:   18px;
+      --shadow:      0 2px 20px rgba(100,80,60,.07);
+      --shadow-md:   0 4px 32px rgba(100,80,60,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.65;
+      background-image:
+        radial-gradient(ellipse 70% 50% at 0% 0%,   rgba(138,171,150,.10) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 30%, rgba(126,175,201,.09) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 50% 100%, rgba(212,165,176,.08) 0%, transparent 55%);
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    /* ── Topbar ──────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(247,245,242,.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 60px;
+      box-shadow: 0 1px 12px rgba(100,80,60,.05);
+    }
+    .brand { display: flex; align-items: center; gap: .85rem; text-decoration: none; color: var(--text); }
+    .brand-logo {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--sage), var(--blue));
+      display: grid; place-items: center;
+      font-family: var(--serif); font-size: .95rem; font-style: italic;
+      color: white; letter-spacing: .01em;
+    }
+    .brand-title {
+      font-family: var(--serif); font-size: 1.25rem;
+      font-weight: 600; color: var(--text); letter-spacing: .02em;
+    }
+    .brand-sub { font-size: .72rem; color: var(--text-soft); letter-spacing: .04em; margin-top: -2px; }
+    .nav-pill {
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .75rem; color: var(--sage);
+      background: var(--sage-dim); border: 1px solid var(--sage-light);
+      padding: 4px 14px; border-radius: 20px;
+    }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--sage); animation: pulse 2.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+    /* ── Page ────────────────────────────────── */
+    .page { max-width: 1260px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+
+    /* ── Hero ────────────────────────────────── */
+    .hero { margin-bottom: 3rem; text-align: center; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .75rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--text-soft); margin-bottom: .8rem;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; width: 28px; height: 1px; background: var(--border2);
+    }
+    .hero-title {
+      font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300; line-height: 1.2; color: var(--text);
+      margin-bottom: .65rem; letter-spacing: .01em;
+    }
+    .hero-title em { font-style: italic; color: var(--blue); }
+    .hero-sub { font-size: .9rem; color: var(--text-soft); letter-spacing: .02em; }
+
+    /* ── Divider ─────────────────────────────── */
+    .divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 2rem 0; color: var(--text-pale); font-size: .7rem; letter-spacing: .1em;
+    }
+    .divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--border); }
+
+    /* ── Alerts ──────────────────────────────── */
+    .alerts { margin-bottom: 1.5rem; }
+    .alert {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .8rem 1.2rem; border-radius: var(--radius);
+      font-size: .875rem; margin-bottom: .5rem;
+      border: 1px solid transparent;
+      animation: fadeUp .25s ease;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(-5px);} to{opacity:1;transform:none;} }
+    .alert-success { background: var(--sage-dim);  border-color: var(--sage-light);  color: #4a7a5a; }
+    .alert-error   { background: var(--blush-dim); border-color: var(--blush-light); color: #8a3a4a; }
+
+    /* ── Stats ───────────────────────────────── */
+    .stats {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 1.1rem; margin-bottom: 2.5rem;
+    }
+    @media(max-width:768px){ .stats{grid-template-columns:repeat(2,1fr);} }
+
+    .stat {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.4rem 1.5rem;
+      box-shadow: var(--shadow);
+      transition: transform .22s, box-shadow .22s;
+      position: relative; overflow: hidden;
+    }
+    .stat::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .stat:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .stat.s::before { background: linear-gradient(90deg, var(--sage), var(--sage-light)); }
+    .stat.b::before { background: linear-gradient(90deg, var(--blue), var(--blue-light)); }
+    .stat.p::before { background: linear-gradient(90deg, var(--blush), var(--blush-light)); }
+    .stat.l::before { background: linear-gradient(90deg, var(--lavender), #d5d0ec); }
+
+    .stat-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      display: grid; place-items: center; font-size: .95rem;
+      margin-bottom: .85rem;
+    }
+    .stat.s .stat-icon { background: var(--sage-dim);  color: var(--sage); }
+    .stat.b .stat-icon { background: var(--blue-dim);  color: var(--blue); }
+    .stat.p .stat-icon { background: var(--blush-dim); color: var(--blush); }
+    .stat.l .stat-icon { background: var(--lav-dim);   color: var(--lavender); }
+
+    .stat-num {
+      font-family: var(--serif); font-size: 2.4rem; font-weight: 500;
+      line-height: 1; margin-bottom: .2rem;
+    }
+    .stat.s .stat-num { color: var(--sage); }
+    .stat.b .stat-num { color: var(--blue); }
+    .stat.p .stat-num { color: var(--blush); }
+    .stat.l .stat-num { color: var(--lavender); }
+    .stat-lbl { font-size: .8rem; color: var(--text-soft); font-weight: 500; }
+
+    /* ── Layout grid ─────────────────────────── */
+    .layout { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; align-items: start; }
+    @media(max-width:900px){ .layout{grid-template-columns:1fr;} }
+    .right { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* ── Panel ───────────────────────────────── */
+    .panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .panel-head {
+      display: flex; align-items: center; gap: .7rem;
+      padding: 1rem 1.4rem; background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: grid; place-items: center; font-size: .88rem;
+    }
+    .panel-icon.s { background: var(--sage-dim);  color: var(--sage); }
+    .panel-icon.b { background: var(--blue-dim);  color: var(--blue); }
+    .panel-icon.p { background: var(--blush-dim); color: var(--blush); }
+
+    .panel-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; color: var(--text); }
+    .panel-count {
+      margin-left: auto; font-size: .72rem;
+      background: var(--blue-dim); color: var(--blue);
+      border: 1px solid var(--blue-light);
+      padding: 2px 10px; border-radius: 20px;
+    }
+    .panel-body { padding: 1.4rem; }
+
+    /* ── Form ────────────────────────────────── */
+    .field { margin-bottom: 1.1rem; }
+    .field label {
+      display: block; font-size: .78rem; font-weight: 600;
+      color: var(--text-mid); margin-bottom: .38rem; letter-spacing: .03em;
+    }
+    .field input[type=text],
+    .field input[type=file] {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border2); border-radius: var(--radius);
+      color: var(--text); font-family: var(--sans); font-size: .88rem;
+      padding: .6rem .95rem; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field input:focus {
+      border-color: var(--sage);
+      box-shadow: 0 0 0 3px rgba(138,171,150,.15);
+    }
+    .field input::placeholder { color: var(--text-pale); }
+    .field input[type=file] { padding: .5rem .9rem; cursor: pointer; }
+    .field input[type=file]::-webkit-file-upload-button {
+      background: linear-gradient(135deg, var(--sage), #6a9478);
+      color: white; border: none; padding: .32rem .9rem;
+      border-radius: 7px; font-size: .78rem; font-weight: 600; cursor: pointer; margin-right: .7rem;
+    }
+    .field-hint { font-size: .72rem; color: var(--text-pale); margin-top: .3rem; }
+    .field-error { font-size: .75rem; color: #a04050; margin-top: .3rem; }
+
+    .btn-upload {
+      width: 100%; border: none; border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--sage) 0%, var(--blue) 100%);
+      color: white; font-family: var(--sans); font-size: .9rem; font-weight: 600;
+      padding: .72rem 1.2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      box-shadow: 0 4px 18px rgba(138,171,150,.3);
+      transition: opacity .18s, transform .15s, box-shadow .18s;
+    }
+    .btn-upload:hover { opacity: .92; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(138,171,150,.35); }
+    .btn-upload:active { transform: none; }
+    .btn-upload.loading { opacity: .6; pointer-events: none; }
+    .spinner { display:none; width:15px; height:15px; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; border-radius:50%; animation:spin .6s linear infinite; }
+    .btn-upload.loading .spinner { display: block; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ── Table ───────────────────────────────── */
+    .tbl-wrap { overflow-x: auto; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    .tbl thead tr { background: var(--surface2); border-bottom: 1px solid var(--border); }
+    .tbl th {
+      font-size: .68rem; font-weight: 700; letter-spacing: .09em;
+      text-transform: uppercase; color: var(--text-soft);
+      padding: .7rem 1.1rem; text-align: left; white-space: nowrap;
+    }
+    .tbl tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    .tbl tbody tr:last-child { border-bottom: none; }
+    .tbl tbody tr:hover { background: rgba(138,171,150,.04); }
+    .tbl td { padding: .8rem 1.1rem; color: var(--text-mid); vertical-align: middle; }
+    .tbl td.hi { color: var(--text); font-weight: 500; }
+    .tbl td.mono { font-family: monospace; font-size: .8rem; color: var(--blue); }
+    .empty td { text-align:center; color:var(--text-pale); font-size:.82rem; padding:2.5rem 1rem; letter-spacing:.04em; }
+
+    /* ── Audio player ────────────────────────── */
+    audio { height: 28px; width: 185px; opacity: .85; }
+
+    /* ── Badges ──────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-size: .7rem; font-weight: 600; letter-spacing: .03em;
+      padding: 3px 11px; border-radius: 20px; border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .b-auth   { background: var(--sage-dim);  color: #3a7050; border-color: var(--sage-light); }
+    .b-likely { background: var(--blue-dim);  color: #2a6080; border-color: var(--blue-light); }
+    .b-mod    { background: var(--blush-dim); color: #8a3a4a; border-color: var(--blush-light); }
+    .b-clean  { background: var(--sage-dim);  color: #3a7050; border-color: var(--sage-light); }
+    .b-tamper { background: var(--blush-dim); color: #8a3a4a; border-color: var(--blush-light); }
+    .b-wm     { background: var(--lav-dim);   color: #4a4080; border-color: #d0cce8; font-size:.67rem; }
+
+    /* ── Similarity bar ──────────────────────── */
+    .sim-wrap { display:flex; align-items:center; gap:.5rem; min-width:120px; }
+    .sim-track { flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+    .sim-fill  { height:100%; border-radius:3px; transition:width .55s ease; }
+    .sim-val   { font-size:.76rem; color:var(--text-mid); min-width:40px; text-align:right; font-weight:600; }
+
+    /* ── Segment ─────────────────────────────── */
+    .seg { font-family: monospace; font-size: .76rem; }
+    .seg.has  { color: var(--blush); font-weight: 600; }
+    .seg.none { color: var(--text-pale); }
+
+    /* ── Buttons ─────────────────────────────── */
+    .btn-sm {
+      display: inline-flex; align-items: center; gap: .3rem;
+      padding: .3rem .75rem; border-radius: 8px; font-size: .74rem; font-weight: 600;
+      border: 1px solid transparent; cursor: pointer; text-decoration: none;
+      transition: all .18s; white-space: nowrap; font-family: var(--sans);
+    }
+    .btn-report { background: var(--blue-dim); border-color: var(--blue-light); color: #2a6080; }
+    .btn-report:hover { background: var(--blue-light); border-color: var(--blue); }
+    .btn-del { background: var(--blush-dim); border-color: var(--blush-light); color: #8a3a4a; }
+    .btn-del:hover { background: var(--blush-light); border-color: var(--blush); }
+
+    /* ── Footer ──────────────────────────────── */
+    footer {
+      margin-top: 5rem; padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center; font-size: .78rem; color: var(--text-pale);
+      letter-spacing: .04em;
+    }
+    footer span { color: var(--sage); font-style: italic; font-family: var(--serif); }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a href="/" class="brand">
+    <div class="brand-logo">A</div>
+    <div>
+      <div class="brand-title">AFIP</div>
+      <div class="brand-sub">Audio Forensic Intelligence Platform</div>
+    </div>
+  </a>
+  <div class="nav-pill"><div class="pulse"></div> System Online</div>
+</nav>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Evidence · Analysis · Verification</div>
+    <h1 class="hero-title">Audio <em>Forensic</em> Intelligence</h1>
+    <p class="hero-sub">Authenticity verification · Tamper detection · Watermark validation · Forensic reporting</p>
+  </div>
+
+  {% if messages %}
+  <div class="alerts">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      <i class="bi {% if message.tags == 'success' %}bi-check-circle{% else %}bi-exclamation-triangle{% endif %}"></i>
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="stats">
+    <div class="stat s">
+      <div class="stat-icon"><i class="bi bi-collection-play"></i></div>
+      <div class="stat-num">{{ total_audio }}</div>
+      <div class="stat-lbl">Total Evidence</div>
+    </div>
+    <div class="stat b">
+      <div class="stat-icon"><i class="bi bi-arrow-repeat"></i></div>
+      <div class="stat-num">{{ total_verifications }}</div>
+      <div class="stat-lbl">Verifications</div>
+    </div>
+    <div class="stat p">
+      <div class="stat-icon"><i class="bi bi-patch-check"></i></div>
+      <div class="stat-num">{{ total_authentic }}</div>
+      <div class="stat-lbl">Authenticated</div>
+    </div>
+    <div class="stat l">
+      <div class="stat-icon"><i class="bi bi-exclamation-diamond"></i></div>
+      <div class="stat-num">{{ total_tampered }}</div>
+      <div class="stat-lbl">Tamper Flags</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <div>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-icon s"><i class="bi bi-cloud-upload"></i></div>
+          <span class="panel-title">Upload Evidence</span>
+        </div>
+        <div class="panel-body">
+          <form method="POST" enctype="multipart/form-data" id="upload-form">
+            {% csrf_token %}
+            <div class="field">
+              <label>Case ID</label>
+              {{ form.case_id }}
+              {% for e in form.case_id.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="field">
+              <label>Evidence Label</label>
+              {{ form.filename }}
+              {% for e in form.filename.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="field">
+              <label>Audio File</label>
+              {{ form.audio_file }}
+              {% for e in form.audio_file.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+              <div class="field-hint">MP3 · WAV · FLAC · OGG · AAC · M4A</div>
+            </div>
+            <button type="submit" class="btn-upload" id="upload-btn">
+              <div class="spinner"></div>
+              <i class="bi bi-upload"></i>
+              <span id="btn-text">Analyse &amp; Upload</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-icon b"><i class="bi bi-database"></i></div>
+          <span class="panel-title">Evidence Repository</span>
+          <span class="panel-count">{{ total_audio }}</span>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Case ID</th><th>Label</th><th>Duration</th>
+                <th>Sample Rate</th><th>Watermark</th><th>Play</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for audio in audio_files %}
+              <tr>
+                <td class="mono">{{ audio.case_id }}</td>
+                <td class="hi">{{ audio.filename }}</td>
+                <td class="mono">{{ audio.duration_display }}</td>
+                <td class="mono">{{ audio.sample_rate|default:"—" }} Hz</td>
+                <td>
+                  {% if audio.watermark %}
+                    <span class="badge b-wm"><i class="bi bi-shield-check"></i>{{ audio.watermark }}</span>
+                  {% else %}—{% endif %}
+                </td>
+                <td><audio controls preload="none" src="/media/{{ audio.audio_file }}"></audio></td>
+                <td>
+                  <div style="display:flex;gap:.4rem;">
+                    <a href="{% url 'report' audio.id %}" class="btn-sm btn-report">
+                      <i class="bi bi-file-earmark-pdf"></i> Report
+                    </a>
+                    <form method="POST" action="{% url 'delete_audio' audio.id %}" style="display:inline"
+                          onsubmit="return confirm('Delete \'{{ audio.filename }}\'?')">
+                      {% csrf_token %}
+                      <button type="submit" class="btn-sm btn-del"><i class="bi bi-trash3"></i></button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr class="empty"><td colspan="7">No evidence uploaded yet</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-icon p"><i class="bi bi-shield-lock"></i></div>
+          <span class="panel-title">Verification Records</span>
+          <span class="panel-count">{{ total_verifications }}</span>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Original</th><th>Suspect</th><th>Similarity</th>
+                <th>Result</th><th>Tamper Status</th><th>Segment</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for r in verification_records %}
+              <tr>
+                <td class="hi">{{ r.original_audio }}</td>
+                <td class="hi">{{ r.suspect_audio }}</td>
+                <td>
+                  <div class="sim-wrap">
+                    <div class="sim-track">
+                      <div class="sim-fill" data-w="{{ r.similarity_score|floatformat:0 }}" style="width:0%;background:{% if r.similarity_score >= 80 %}linear-gradient(90deg,var(--sage),var(--sage-light)){% elif r.similarity_score >= 50 %}linear-gradient(90deg,var(--blue),var(--blue-light)){% else %}linear-gradient(90deg,var(--blush),var(--blush-light)){% endif %};"></div>
+                    </div>
+                    <span class="sim-val">{{ r.similarity_score|floatformat:1 }}%</span>
+                  </div>
+                </td>
+                <td>
+                  {% if r.result == "Authentic" %}
+                    <span class="badge b-auth"><i class="bi bi-check-circle"></i>Authentic</span>
+                  {% elif r.result == "Likely Authentic" %}
+                    <span class="badge b-likely"><i class="bi bi-check-circle"></i>Likely Authentic</span>
+                  {% else %}
+                    <span class="badge b-mod"><i class="bi bi-x-circle"></i>Modified</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if r.tamper_status == "No Tampering" %}
+                    <span class="badge b-clean"><i class="bi bi-shield-check"></i>Clean</span>
+                  {% else %}
+                    <span class="badge b-tamper"><i class="bi bi-exclamation-triangle"></i>Tampering</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if r.tampered_segment and r.tampered_segment != "None" %}
+                    <span class="seg has">{{ r.tampered_segment }}</span>
+                  {% else %}<span class="seg none">—</span>{% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr class="empty"><td colspan="6">No verification records yet</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>AFIP</span> · Audio Forensic Intelligence Platform · Django · Librosa · ReportLab
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('upload-form').addEventListener('submit', function() {
+    const f = this.querySelector('input[type=file]');
+    if (f && f.files.length > 0) {
+      const btn = document.getElementById('upload-btn');
+      btn.classList.add('loading');
+      document.getElementById('btn-text').textContent = 'Analysing…';
+    }
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.sim-fill').forEach(b => {
+      const w = b.dataset.w;
+      setTimeout(() => { b.style.width = w + '%'; }, 150);
+    });
+  });
+</script>
+</body>
+</html>

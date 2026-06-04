@@ -1,0 +1,48 @@
+Audio Forensic Intelligence Platform Architecture
+
+User
+|
+v
+Audio Upload Interface
+|
+v
+AudioFile Model
+|
+v
+Audio Storage (media/audio)
+|
+v
+Audio Processing Engine (Librosa)
+|
++--> Duration Extraction
+|
++--> Sample Rate Extraction
+|
++--> MFCC Feature Extraction
+|
+v
+Fingerprint Generation (SHA256)
+|
+v
+Watermark Generation
+|
+v
+Verification Engine
+|
++--> Similarity Analysis
+|
++--> Authenticity Verification
+|
++--> Tamper Detection
+|
+v
+VerificationRecord Model
+|
+v
+Dashboard Analytics
+|
+v
+PDF Forensic Report Generation
+|
+v
+Investigator / User
